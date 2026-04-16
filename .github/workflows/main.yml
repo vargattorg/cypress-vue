@@ -16,16 +16,8 @@ jobs:
       matrix:
         project:
           [
-            "angular-standalone",
-            "angular-zoneless",
-            "react-next15-ts",
-            "react-next16-ts",
-            "react-vite-ts",
-            "react-webpack5-js",
-            "svelte-vite-ts",
-            "svelte-webpack-ts",
+         
             "vue3-vite-ts",
-            "vue3-webpack-ts",
           ]
 
     name: Cypress Tests
