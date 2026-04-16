@@ -1,0 +1,101 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "vue3-vite-ts/**"
+      - ".github/workflows/cypress-tests.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "vue3-vite-ts/**"
+
+jobs:
+  component-tests:
+    name: Component Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: "vue3-vite-ts/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: ./vue3-vite-ts
+        run: npm install
+
+      - name: Run component tests
+        working-directory: ./vue3-vite-ts
+        run: npm run cypress:run
+
+      - name: Upload component test videos
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-test-videos-node-${{ matrix.node-version }}
+          path: vue3-vite-ts/cypress/videos
+          retention-days: 5
+
+      - name: Upload component test screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-test-screenshots-node-${{ matrix.node-version }}
+          path: vue3-vite-ts/cypress/screenshots
+          retention-days: 5
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: runs-on: blacksmith-4vcpu-ubuntu-2204
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: "vue3-vite-ts/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: ./vue3-vite-ts
+        run: npm install
+
+      - name: Build application
+        working-directory: ./vue3-vite-ts
+        run: npm run build
+
+      - name: Run e2e tests
+        working-directory: ./vue3-vite-ts
+        run: npx cypress run
+
+      - name: Upload e2e test videos
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-videos-node-${{ matrix.node-version }}
+          path: vue3-vite-ts/cypress/videos
+          retention-days: 5
+
+      - name: Upload e2e test screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-screenshots-node-${{ matrix.node-version }}
+          path: vue3-vite-ts/cypress/screenshots
+          retention-days: 5
