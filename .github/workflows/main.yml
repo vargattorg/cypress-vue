@@ -29,7 +29,6 @@ jobs:
         with:
           component: true
           working-directory: "${{ matrix.project }}"
-      # smoke tests the sample app and makes sure the login via msw works as expected
       - name: Cypress E2E Tests
         uses: cypress-io/github-action@v6
         with:
@@ -37,3 +36,9 @@ jobs:
           wait-on: "http://localhost:4200"
           working-directory: "${{ matrix.project }}"
           browser: chrome
+        env:
+          BUILDKITE_ANALYTICS_TOKEN: ${{ secrets.BUILDKITE_ANALYTICS_TOKEN }}
+          CI: true
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
