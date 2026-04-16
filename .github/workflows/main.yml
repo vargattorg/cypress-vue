@@ -14,11 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project:
-          [
-         
-            "vue3-vite-ts",
-          ]
+        project: ["vue3-vite-ts"]
 
     name: Cypress Tests
     steps:
@@ -38,6 +34,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: npm start
-          wait-on: 'http://localhost:4200'
+          wait-on: "http://localhost:4200"
           working-directory: "${{ matrix.project }}"
           browser: chrome
