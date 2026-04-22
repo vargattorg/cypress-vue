@@ -1,10 +1,9 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  reporter: "junit",
+  reporter: "buildkite-test-collector/cypress/reporter",
   reporterOptions: {
-    mochaFile: "cypress/results/junit-report.xml",
-    toConsole: true,
+    token_name: "BUILDKITE_ANALYTICS_TOKEN",
   },
   component: {
     devServer: {
